@@ -26,7 +26,7 @@ output "random_id" {
   value = random_id.post_fix.hex
 }
 
-output "library_user_key_vault_name" {
+output "user_vault_name" {
   value = local.user_kv_exist ? local.user_kv_name : azurerm_key_vault.kv_user[0].name
 }
 
