@@ -138,12 +138,6 @@ data "azurerm_key_vault_secret" "iscsi_password" {
   key_vault_id = local.user_key_vault_id
 }
 
-data "azurerm_key_vault_secret" "iscsi_username" {
-  count        = (local.enable_landscape_kv && local.iscsi_username_exist) ? 1 : 0
-  name         = local.iscsi_username_name
-  key_vault_id = local.user_key_vault_id
-}
-
 // Using TF tls to generate SSH key pair for SID
 resource "tls_private_key" "sid" {
   count = (
