@@ -32,8 +32,8 @@ locals {
 
   // Resource group
   var_rg    = try(local.var_infra.resource_group, {})
-  rg_exists = try(local.var_rg.is_existing, false)
-  rg_arm_id = local.rg_exists ? try(local.var_rg.arm_id, "") : ""
+  rg_arm_id = try(local.var_rg.arm_id, "")
+  rg_exists = length(local.rg_arm_id) > 0 ? true : false
 
   rg_name = try(var.infrastructure.resource_group.name, format("%s%s", local.prefix, local.resource_suffixes.library_rg))
 
@@ -75,6 +75,8 @@ locals {
   // deployer
   deployer      = try(var.deployer, {})
   deployer_vnet = try(local.deployer.vnet, "")
+
+  enable_vm = try(var.deployers[0].deploy_vm, true)
 
   // Comment out code with users.object_id for the time being.
   // deployer_users_id = try(local.deployer.users.object_id, [])

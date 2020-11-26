@@ -11,7 +11,7 @@ data azurerm_client_config "current" {}
 
 // Public IP addresse and nic for Deployer
 resource "azurerm_public_ip" "deployer" {
-  count               = local.enable_deployer_public_ip ? length(local.deployers) : 0
+  count               = local.enable_deployer_public_ip && local.enable_deployers ? length(local.deployers) : 0
   name                = format("%s%s%s%s", local.prefix, var.naming.separator, local.deployers[count.index].name, local.resource_suffixes.pip)
   location            = azurerm_resource_group.deployer[0].location
   resource_group_name = azurerm_resource_group.deployer[0].name
@@ -19,7 +19,7 @@ resource "azurerm_public_ip" "deployer" {
 }
 
 resource "azurerm_network_interface" "deployer" {
-  count               = length(local.deployers)
+  count               = local.enable_deployers ? length(local.deployers) : 0
   name                = format("%s%s%s%s", local.prefix, var.naming.separator, local.deployers[count.index].name, local.resource_suffixes.nic)
   location            = azurerm_resource_group.deployer[0].location
   resource_group_name = azurerm_resource_group.deployer[0].name
@@ -35,6 +35,7 @@ resource "azurerm_network_interface" "deployer" {
 
 // User defined identity for all Deployer, assign contributor to the current subscription
 resource "azurerm_user_assigned_identity" "deployer" {
+  count               = local.enable_deployers ? 1 : 0
   resource_group_name = azurerm_resource_group.deployer[0].name
   location            = azurerm_resource_group.deployer[0].location
   name                = format("%s-msi", local.prefix)
@@ -42,14 +43,15 @@ resource "azurerm_user_assigned_identity" "deployer" {
 
 // Add role to be able to deploy resources
 resource "azurerm_role_assignment" "sub_contributor" {
+  count                = local.enable_deployers ? 1 : 0
   scope                = data.azurerm_subscription.primary.id
   role_definition_name = "Contributor"
-  principal_id         = azurerm_user_assigned_identity.deployer.principal_id
+  principal_id         = azurerm_user_assigned_identity.deployer[0].principal_id
 }
 
 // Linux Virtual Machine for Deployer
 resource "azurerm_linux_virtual_machine" "deployer" {
-  count                           = length(local.deployers)
+  count                           = local.enable_deployers ? length(local.deployers) : 0
   name                            = format("%s%s%s%s", local.prefix, var.naming.separator, local.deployers[count.index].name, local.resource_suffixes.vm)
   computer_name                   = local.deployers[count.index].name
   location                        = azurerm_resource_group.deployer[0].location
@@ -80,7 +82,7 @@ resource "azurerm_linux_virtual_machine" "deployer" {
 
   identity {
     type         = "UserAssigned"
-    identity_ids = [azurerm_user_assigned_identity.deployer.id]
+    identity_ids = [azurerm_user_assigned_identity.deployer[0].id]
   }
 
   dynamic "admin_ssh_key" {
@@ -112,7 +114,7 @@ resource "azurerm_linux_virtual_machine" "deployer" {
 // Prepare deployer with pre-installed softwares if pip is created
 resource "null_resource" "prepare-deployer" {
   depends_on = [azurerm_linux_virtual_machine.deployer]
-  count      = local.enable_deployer_public_ip ? length(local.deployers) : 0
+  count      = local.enable_deployer_public_ip && local.enable_deployers ? length(local.deployers) : 0
 
   connection {
     type        = "ssh"

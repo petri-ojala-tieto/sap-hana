@@ -16,7 +16,7 @@ resource "azurerm_key_vault" "kv_prvt" {
 
 // Import an existing private Key Vault
 data "azurerm_key_vault" "kv_prvt" {
-  count               = (local.enable_deployers && local.prvt_kv_exist) ? 1 : 0
+  count               = local.prvt_kv_exist ? 1 : 0
   name                = local.prvt_kv_name
   resource_group_name = local.prvt_kv_rg_name
 }
@@ -26,7 +26,7 @@ resource "azurerm_key_vault_access_policy" "kv_prvt_msi" {
   key_vault_id = azurerm_key_vault.kv_prvt[0].id
 
   tenant_id = data.azurerm_client_config.deployer.tenant_id
-  object_id = azurerm_user_assigned_identity.deployer.principal_id
+  object_id = azurerm_user_assigned_identity.deployer[0].principal_id
 
   secret_permissions = [
     "get",
@@ -49,7 +49,7 @@ resource "azurerm_key_vault" "kv_user" {
 
 // Import an existing user Key Vault
 data "azurerm_key_vault" "kv_user" {
-  count               = (local.enable_deployers && local.user_kv_exist) ? 1 : 0
+  count               = local.user_kv_exist ? 1 : 0
   name                = local.user_kv_name
   resource_group_name = local.user_kv_rg_name
 }
@@ -59,7 +59,7 @@ resource "azurerm_key_vault_access_policy" "kv_user_msi" {
   key_vault_id = azurerm_key_vault.kv_user[0].id
 
   tenant_id = data.azurerm_client_config.deployer.tenant_id
-  object_id = azurerm_user_assigned_identity.deployer.principal_id
+  object_id = azurerm_user_assigned_identity.deployer[0].principal_id
 
   secret_permissions = [
     "delete",
