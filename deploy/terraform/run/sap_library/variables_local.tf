@@ -55,8 +55,11 @@ locals {
   // If custom names are used for deployer, providing resource_group_name and msi_name will override the naming convention
   deployer_rg_name = try(local.deployer.resource_group_name, format("%s-INFRASTRUCTURE", local.deployer_prefix))
 
+  user_key_vault_id = try(var.key_vault.kv_user_id, "")
+  user_kv_exist     = try(length(local.user_key_vault_id) > 0, false)
+
   // Retrieve the arm_id of deployer's Key Vault from deployer's terraform.tfstate
-  deployer_key_vault_arm_id = try(data.terraform_remote_state.deployer.outputs.deployer_kv_user_arm_id, "")
+  deployer_key_vault_arm_id = try(var.key_vault.kv_user_id, try(data.terraform_remote_state.deployer[0].outputs.deployer_kv_user_arm_id, ""))
 
   // Locate the tfstate storage account
   tfstate_resource_id          = try(var.tfstate_resource_id, "")

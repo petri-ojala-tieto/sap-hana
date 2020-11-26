@@ -49,7 +49,7 @@ output "nsg_mgmt_id" {
 
 // Details of the user assigned identity for deployer(s)
 output "deployer_uai" {
-  value = local.enable_deployers ? azurerm_user_assigned_identity.deployer : []
+  value = local.enable_deployers ? azurerm_user_assigned_identity.deployer[0].principal_id : ""
 }
 
 // Details of deployer pip(s)
