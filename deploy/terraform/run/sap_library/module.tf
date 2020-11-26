@@ -12,6 +12,7 @@ module "sap_library" {
   service_principal       = local.service_principal
   deployer_tfstate        = data.terraform_remote_state.deployer
   naming                  = module.sap_namegenerator.naming
+  key_vault               = var.key_vault
 }
 
 module sap_namegenerator {

@@ -76,7 +76,7 @@ locals {
   deployer      = try(var.deployer, {})
   deployer_vnet = try(local.deployer.vnet, "")
 
-  enable_vm = try(var.deployers[0].deploy_vm, true)
+  enable_vm = try(var.deployer.deploy_vm, true)
 
   // Comment out code with users.object_id for the time being.
   // deployer_users_id = try(local.deployer.users.object_id, [])
@@ -86,7 +86,7 @@ locals {
 
   // deployer terraform.tfstate
   deployer_tfstate          = var.deployer_tfstate
-  deployer_msi_principal_id = local.deployer_tfstate.outputs.deployer_uai.principal_id
+  deployer_msi_principal_id = local.sa_tfstate_exists ? local.deployer_tfstate.outputs.deployer_uai : ""
 
   // If the user specifies arm id of key vaults in input, the key vault will be imported instead of creating new key vaults
   user_key_vault_id = try(var.key_vault.kv_user_id, "")
