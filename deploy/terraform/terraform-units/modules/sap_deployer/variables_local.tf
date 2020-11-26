@@ -20,8 +20,13 @@ locals {
   enable_deployer_public_ip = try(var.options.enable_deployer_public_ip, false)
 
   // Resource group and location
-  region  = try(var.infrastructure.region, "")
-  prefix  = try(var.infrastructure.resource_group.name, var.naming.prefix.DEPLOYER)
+
+  region = try(var.infrastructure.region, "")
+  prefix = try(var.infrastructure.resource_group.name, var.naming.prefix.DEPLOYER)
+
+  rg_arm_id = try(var.infrastructure.resource_group.arm_id, "")
+  rg_exists = length(local.rg_arm_id) > 0 ? true : false
+
   rg_name = try(var.infrastructure.resource_group.name, format("%s%s", local.prefix, local.resource_suffixes.deployer_rg))
 
   // Post fix for all deployed resources
@@ -54,7 +59,7 @@ locals {
   deployer_input = var.deployers
 
   // Deployer(s) information with default override
-  enable_deployers = length(local.deployer_input) > 0 ? true : false
+  enable_deployers = length(local.deployer_input) > 0 && try(var.deployers[0].deploy_vm, true) ? true : false
 
   // Deployer(s) authentication method with default
   enable_password = contains(compact([
@@ -84,7 +89,7 @@ locals {
   public_key  = (local.enable_deployers && local.enable_key) ? (local.key_exist ? data.azurerm_key_vault_secret.pk[0].value : try(file(var.sshkey.path_to_public_key), tls_private_key.deployer[0].public_key_openssh)) : null
   private_key = (local.enable_deployers && local.enable_key) ? (local.key_exist ? data.azurerm_key_vault_secret.ppk[0].value : try(file(var.sshkey.path_to_private_key), tls_private_key.deployer[0].private_key_pem)) : null
 
-  deployers = [
+  deployers = local.enable_deployers ? [
     for idx, deployer in local.deployer_input : {
       "name"                 = local.virtualmachine_names[idx],
       "destroy_after_deploy" = true,
@@ -115,14 +120,14 @@ locals {
         "object_id" = try(deployer.users.object_id, [])
       }
     }
-  ]
+  ] : []
 
   // Deployer(s) information with updated pip
-  deployers_updated = [
+  deployers_updated = local.enable_deployers ? [
     for idx, deployer in local.deployers : merge({
       "public_ip_address" = local.enable_deployer_public_ip ? azurerm_public_ip.deployer[idx].ip_address : ""
     }, deployer)
-  ]
+  ] : []
 
   // This is to be aligned with sap_library design.
   // If no additonal user going to be supported, this part needs to be changed.

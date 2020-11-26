@@ -6,10 +6,17 @@ Description:
 
 // Create managed resource group for sap deployer with CanNotDelete lock
 resource "azurerm_resource_group" "deployer" {
-  count    = local.enable_deployers ? 1 : 0
+  count    = local.enable_deployers && ! local.rg_exists ? 1 : 0
   name     = local.rg_name
   location = local.region
 }
+
+// Imports data of existing resource group
+data "azurerm_resource_group" "deployer" {
+  count = local.rg_exists ? 1 : 0
+  name  = split("/", local.rg_arm_id)[4]
+}
+
 
 // TODO: Add management lock when this issue is addressed https://github.com/terraform-providers/terraform-provider-azurerm/issues/5473
 
@@ -23,7 +30,7 @@ resource "azurerm_virtual_network" "vnet_mgmt" {
 }
 
 data "azurerm_virtual_network" "vnet_mgmt" {
-  count               = (local.enable_deployers && local.vnet_mgmt_exists) ? 1 : 0
+  count               = local.vnet_mgmt_exists ? 1 : 0
   name                = split("/", local.vnet_mgmt_arm_id)[8]
   resource_group_name = split("/", local.vnet_mgmt_arm_id)[4]
 }
@@ -38,7 +45,7 @@ resource "azurerm_subnet" "subnet_mgmt" {
 }
 
 data "azurerm_subnet" "subnet_mgmt" {
-  count                = (local.enable_deployers && local.sub_mgmt_exists) ? 1 : 0
+  count                = local.sub_mgmt_exists ? 1 : 0
   name                 = split("/", local.sub_mgmt_arm_id)[10]
   resource_group_name  = split("/", local.sub_mgmt_arm_id)[4]
   virtual_network_name = split("/", local.sub_mgmt_arm_id)[8]

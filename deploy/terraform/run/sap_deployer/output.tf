@@ -9,19 +9,19 @@ output "deployer_id" {
   value     = module.sap_deployer.deployer_id
 }
 
-output "vnet_mgmt" {
+output "vnet_mgmt_id" {
   sensitive = true
-  value     = module.sap_deployer.vnet_mgmt
+  value     = module.sap_deployer.vnet_mgmt_id
 }
 
-output "subnet_mgmt" {
+output "subnet_mgmt_id" {
   sensitive = true
-  value     = module.sap_deployer.subnet_mgmt
+  value     = module.sap_deployer.subnet_mgmt_id
 }
 
-output "nsg_mgmt" {
+output "nsg_mgmt_id" {
   sensitive = true
-  value     = module.sap_deployer.nsg_mgmt
+  value     = module.sap_deployer.nsg_mgmt_id
 }
 
 output "deployer_uai" {

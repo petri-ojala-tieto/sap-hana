@@ -13,7 +13,7 @@ resource "azurerm_network_security_group" "nsg_mgmt" {
 }
 
 data "azurerm_network_security_group" "nsg_mgmt" {
-  count               = local.enable_deployers && local.sub_mgmt_nsg_exists ? 1 : 0
+  count               = local.sub_mgmt_nsg_exists ? 1 : 0
   name                = split("/", local.sub_mgmt_nsg_arm_id)[8]
   resource_group_name = split("/", local.sub_mgmt_nsg_arm_id)[4]
 }
