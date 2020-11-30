@@ -5,22 +5,24 @@
         "vm_size": "Standard_D4s_v3",
         "accelerated_networking": false
       },
-      "os": [{
-        "count": 1,
-        "name": "data",
-        "disk_type": "Premium_LRS",
-        "size_gb": 64,
-        "caching": "None",
-        "write_accelerator": false
-      }],
-      "storage": [{
-        "count": 1,
-        "name": "data",
-        "disk_type": "Premium_LRS",
-        "size_gb": 512,
-        "caching": "None",
-        "write_accelerator": false
-      }]
+      "storage": [
+        {
+          "count": 1,
+          "name": "os",
+          "disk_type": "Premium_LRS",
+          "size_gb": 64,
+          "caching": "None",
+          "write_accelerator": false
+        },
+        {
+          "count": 1,
+          "name": "data",
+          "disk_type": "Premium_LRS",
+          "size_gb": 512,
+          "caching": "None",
+          "write_accelerator": false
+        }
+      ]
     }
   },
   "scs": {
@@ -29,22 +31,24 @@
         "vm_size": "Standard_D4s_v3",
         "accelerated_networking": false
       },
-      "os": [{
-        "count": 1,
-        "name": "osdisk",
-        "disk_type": "Premium_LRS",
-        "size_gb": 64,
-        "caching": "None",
-        "write_accelerator": false
-      }],
-      "storage": [{
-        "count": 1,
-        "name": "data",
-        "disk_type": "Premium_LRS",
-        "size_gb": 512,
-        "caching": "None",
-        "write_accelerator": false
-      }]
+      "storage": [
+        {
+          "count": 1,
+          "name": "os",
+          "disk_type": "Premium_LRS",
+          "size_gb": 64,
+          "caching": "None",
+          "write_accelerator": false
+        },
+        {
+          "count": 1,
+          "name": "data",
+          "disk_type": "Premium_LRS",
+          "size_gb": 512,
+          "caching": "None",
+          "write_accelerator": false
+        }
+      ]
     }
   },
   "web": {
@@ -53,22 +57,24 @@
         "vm_size": "Standard_D4s_v3",
         "accelerated_networking": false
       },
-      "os": [{
-        "count": 1,
-        "name": "data",
-        "disk_type": "Premium_LRS",
-        "size_gb": 64,
-        "caching": "None",
-        "write_accelerator": false
-      }],
-      "storage": [{
-        "count": 1,
-        "name": "data",
-        "disk_type": "Premium_LRS",
-        "size_gb": 512,
-        "caching": "None",
-        "write_accelerator": false
-      }]
+      "storage": [
+        {
+          "count": 1,
+          "name": "os",
+          "disk_type": "Premium_LRS",
+          "size_gb": 64,
+          "caching": "None",
+          "write_accelerator": false
+        },
+        {
+          "count": 1,
+          "name": "data",
+          "disk_type": "Premium_LRS",
+          "size_gb": 512,
+          "caching": "None",
+          "write_accelerator": false
+        }
+      ]
     }
   }
 }
