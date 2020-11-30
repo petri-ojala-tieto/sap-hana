@@ -51,7 +51,13 @@ locals {
   deployer_rg_name = try(local.deployer.resource_group_name, format("%s-INFRASTRUCTURE", local.deployer_prefix))
 
   // Retrieve the arm_id of deployer's Key Vault from deployer's terraform.tfstate
-  deployer_key_vault_arm_id = try(data.terraform_remote_state.deployer.outputs.deployer_kv_user_arm_id, "")
+  deployer_key_vault_arm_id = try(var.key_vault.kv_user_id, try(data.terraform_remote_state.deployer[0].outputs.deployer_kv_user_arm_id, ""))
+
+  // If the user specifies arm id of key vaults in input, the key vault will be imported instead of creating new key vaults
+  user_key_vault_id = try(var.key_vault.kv_user_id, "")
+  user_kv_exist     = try(length(local.user_key_vault_id) > 0, false)
+
+  use_deployer = try(local.deployer.use_deployer, true)
 
   spn = {
     subscription_id = data.azurerm_key_vault_secret.subscription_id.value,

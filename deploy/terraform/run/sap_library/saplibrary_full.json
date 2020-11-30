@@ -6,7 +6,8 @@
     "deployer": {
         "environment": "np",
         "region": "eastus",
-        "vnet": "DEP00"
+        "vnet": "DEP00",
+        "use_deployer": true
     },
     "key_vault":{
         "kv_user_id": "",
