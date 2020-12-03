@@ -153,7 +153,7 @@ resource "azurerm_windows_virtual_machine" "web" {
     [azurerm_network_interface.web[count.index].id]
   )
 
-  size                            = try(local.web_sizing.compute.vm_size, "Standard_D4s_v3")
+  size           = try(local.web_sizing.compute.vm_size, "Standard_D4s_v3")
   admin_username = local.sid_auth_username
   admin_password = local.sid_auth_password
 
