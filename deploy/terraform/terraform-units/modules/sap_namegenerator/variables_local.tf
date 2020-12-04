@@ -293,7 +293,7 @@ locals {
   //The offset used in resource naming, default is 0
   // 0 -> disk0, disk1
   // 1 -> disk1, disk2
-  offset = 0
+  offset = 1
 
 }
 
