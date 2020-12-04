@@ -74,7 +74,7 @@ resource "azurerm_linux_virtual_machine" "app" {
     [azurerm_network_interface.app[count.index].id]
   )
 
-  size                            = local.app_sizing.compute.vm_size
+  size                            = try(local.app_sizing.compute.vm_size, "Standard_D4s_v3")
   admin_username                  = local.sid_auth_username
   disable_password_authentication = ! local.enable_auth_password
   admin_password                  = local.sid_auth_password
@@ -130,7 +130,7 @@ resource "azurerm_linux_virtual_machine" "app" {
   }
 
   tags = local.app_tags
-  
+
 }
 
 # Create the Windows Application VM(s)
@@ -160,7 +160,7 @@ resource "azurerm_windows_virtual_machine" "app" {
     [azurerm_network_interface.app[count.index].id]
   )
 
-  size           = local.app_sizing.compute.vm_size
+  size           = try(local.app_sizing.compute.vm_size, "Standard_D4s_v3")
   admin_username = local.sid_auth_username
   admin_password = local.sid_auth_password
 
