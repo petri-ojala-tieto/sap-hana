@@ -11,5 +11,6 @@
     "key_vault":{
         "kv_user_id": "",
         "kv_prvt_id": ""
-    }
+    },
+    "tfstate_resource_id": ""
 }
