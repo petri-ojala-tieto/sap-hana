@@ -66,8 +66,8 @@ locals {
 
   region = try(var.infrastructure.region, "")
 
-    //Allowing changing the base for indexing, default is zero-based indexing, if customers want the first disk to start with 1 they would change this
-  offset = var.naming.offset
+  //Allowing changing the base for indexing, default is zero-based indexing, if customers want the first disk to start with 1 they would change this
+  offset = try(var.options.resource_offset, 0)
 
   faultdomain_count = try(tonumber(compact(
     [for pair in local.faults :
