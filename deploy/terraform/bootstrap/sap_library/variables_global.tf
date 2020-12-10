@@ -26,8 +26,3 @@ variable "key_vault" {
   default     = {}
 }
 
-variable "options" {
-  description = "Configuration options"
-  default     = {}
-}
-
