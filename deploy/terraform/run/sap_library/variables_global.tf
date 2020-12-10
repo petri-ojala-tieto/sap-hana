@@ -19,11 +19,6 @@ variable "deployer" {
   default     = {}
 }
 
-variable "options" {
-  description = "Configuration options"
-  default     = {}
-}
-
 variable "key_vault" {
   description = "Import existing Azure Key Vaults"
   default     = {}
